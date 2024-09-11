@@ -7,13 +7,8 @@ services:
       POSTGRES_DB: covid
       POSTGRES_USER: root
       POSTGRES_PASSWORD: wordpass
-    volumes:
-      - data:/var/lib/postgresql/data
 
   extract:
     build: .
     depends_on:
       - database
-
-volumes:
-  data:
