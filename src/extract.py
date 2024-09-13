@@ -4,10 +4,9 @@
 # In[1]:
 
 
+import pandas as pd
 import random
 import time
-
-import pandas as pd
 
 from sqlalchemy import create_engine
 
@@ -25,7 +24,7 @@ print("establishing connection...")
 retry = 1
 while retry <= MAX_RETRIES:
     try:
-        engine = create_engine("postgresql://root:wordpass@database:5432/covid")
+        engine = create_engine("postgresql://root:wordpass@database:5432/space_objects")
         engine.connect()
         print("connection established")
         break
@@ -40,27 +39,25 @@ while retry <= MAX_RETRIES:
 
 
 print("reading csv into master dataframe...")
-df = pd.read_csv("../data/owid-covid-data.csv")
-df = df[["continent", "location", "date", "new_cases", "total_cases", "new_deaths", "total_deaths", "reproduction_rate", "population", "new_vaccinations", "total_vaccinations", "median_age", "aged_65_older", "aged_70_older", "life_expectancy"]]
-df = df.sort_values(by="date")
-print("reading complete")
+df = pd.read_csv("../data/nearest-earth-objects.csv")
+print("reading done")
 
 
 # In[ ]:
 
 
-print("imitating database insertions...")
+print("imitating real time database insertions...")
 index = 0
 batch_size = random.randint(1, 5)
 batch_df = pd.DataFrame()
 while index < len(df):
     batch_df = pd.concat([batch_df, df.iloc[[index]]])
     if len(batch_df) == batch_size:
-        batch_df.to_sql(con=engine, name="deaths", if_exists="append")
+        batch_df.to_sql(con=engine, name="objects", if_exists="append")
         print(f"inserted a batch of size {batch_size}")
         batch_size = random.randint(1, 5)
         batch_df = pd.DataFrame()
         time.sleep(5)
     index += 1
-print("imitation complete")
+print("imitating done")
 
